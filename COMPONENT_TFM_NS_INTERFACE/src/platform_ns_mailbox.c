@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2019-2021, Arm Limited. All rights reserved.
- * Copyright (c) 2019, Cypress Semiconductor Corporation. All rights reserved
+ * Copyright (c) 2019-2022 Cypress Semiconductor Corporation (an Infineon company)
+ * or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -19,7 +20,7 @@
 #include "tfm_ns_mailbox.h"
 #include "platform_multicore.h"
 
-static uint8_t saved_irq_state = 1;
+static uint32_t saved_irq_state = 1UL;
 
 /* -------------------------------------- HAL API ------------------------------------ */
 
@@ -58,12 +59,6 @@ int32_t tfm_ns_mailbox_hal_init(struct ns_mailbox_queue_t *queue)
     if (!queue) {
         return MAILBOX_INVAL_PARAMS;
     }
-
-    /*
-     * FIXME
-     * Further verification of mailbox queue address may be required according
-     * to diverse NSPE implementations.
-     */
 
     mailbox_ipc_init();
 
@@ -151,10 +146,11 @@ static bool mailbox_clear_intr(void)
 
 void cpuss_interrupts_ipc_8_IRQHandler(void)
 {
-    uint32_t magic;
+    uint32_t magic = 0UL;
 
-    if (!mailbox_clear_intr())
+    if (!mailbox_clear_intr()) {
         return;
+    }
 
     platform_mailbox_fetch_msg_data(&magic);
     if (magic == PSA_CLIENT_CALL_REPLY_MAGIC) {

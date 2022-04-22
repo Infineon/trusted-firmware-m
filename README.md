@@ -1,4 +1,4 @@
-# Cypress Trusted Firmware-M (TF-M) for PSoC64
+﻿# Cypress Trusted Firmware-M (TF-M) for PSoC64
 
 ## Overview
 
@@ -12,9 +12,9 @@ This software component is licensed under a mixture of the Apache License, versi
 
 ## Requirements
 
-* [ModusToolbox® software](https://www.cypress.com/products/modustoolbox-software-environment) v2.3
+* [ModusToolbox® software](https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software) v2.4
 * Board Support Package (BSP) minimum required version: 3.0.0
-* PDL version: 2.3.0
+* PDL version: 2.4.0
 * Programming Language: C
 * Associated Parts: See "Supported Kits" section below.
 
@@ -26,7 +26,7 @@ This software component is licensed under a mixture of the Apache License, versi
 
 ## Supported Kits
 
-* [PSoC® 64 Standard Secure - AWS Wi-Fi BT Pioneer Kit (CY8CKIT-064S0S2-4343W)](https://www.cypress.com/documentation/development-kitsboards/psoc-64-standard-secure-aws-wi-fi-bt-pioneer-kit-cy8ckit)
+* [PSoC® 64 Standard Secure - AWS Wi-Fi BT Pioneer Kit (CY8CKIT-064S0S2-4343W)](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ckit-064s0s2-4343w)
 
 ## Features
 
@@ -39,25 +39,35 @@ These services are defined by the [PSA API](https://github.com/ARM-software/psa-
 
 ## Quick Start
 
+### ModusToolBox support
+Refer to the Building Multi-Core TF-M with ModusToolBox section in [Cypress PSoC64 Specifics documentation](https://github.com/Infineon/src-trusted-firmware-m/platform/ext/target/cypress/psoc64/cypress_psoc64_spec.rst)
+
+
 ### Provisioning the kit
 Refer to the [Provisioning Guide](https://www.cypress.com/file/521106/download)
 
-### Adding the library
-
-You can add a dependency file (MTB format) under the deps folder or use the Library Manager to add it in your project.
-
-In the Makefile of the project, ensure RTOS_AWARE is an enabled component if RTOS is used.
-* COMPONENTS=RTOS_AWARE
-
-### Using the library
-
-Include the relevant PSA API header file and refer to [PSA API](https://github.com/ARM-software/psa-arch-tests/tree/master/api-specs)
 
 ## More information
 The following resources contain more information:
 * [Trusted Firmware-M RELEASE.md](./RELEASE.md)
 * [PSA API](https://github.com/ARM-software/psa-arch-tests/tree/master/api-specs)
-* [ModusToolbox Software Environment, Quick Start Guide, Documentation, and Videos](https://www.cypress.com/products/modustoolbox-software-environment)
-* [Cypress Semiconductor](http://www.cypress.com)
+* [ModusToolbox Software Environment, Quick Start Guide, Documentation, and Videos](https://www.infineon.com/cms/en/design-support/tools/sdk/modustoolbox-software)
+* [Cypress Semiconductor Corporation (an Infineon company)](https://www.infineon.com)
 
-© Cypress Semiconductor Corporation, 2021.
+Please use following settings for git if you have issues with patches which are caused by mismatches of line-endings:
+
+```
+# clone as-is, commit as-is
+git config --global core.autocrlf false
+
+# forces Git to normalize line endings to LF on checkin and prevents conversion to CRLF when the file is checked out
+git config --global core.eol lf
+```
+
+The linker files included with TF-M must be generic and handle all common use cases. Your project may not use every
+section defined in the linker files. In that case you may see the warnings during the build process using ARM clang toolchain :
+``L6329W (pattern only matches removed unused sections).``
+In your project, you can suppress the warning by passing the ``-DTFM_LINK_OPTIONS=--diag_suppress=6329`` option to the linker,
+simply comment out or remove the relevant code in the linker file.
+
+*© Copyright (c) 2020-2022 Cypress Semiconductor Corporation (an Infineon company) or an affiliate of Cypress Semiconductor Corporation. All rights reserved.*

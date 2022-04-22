@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2019-2021 Arm Limited. All rights reserved.
- * Copyright (c) 2019 Cypress Semiconductor Corporation. All rights reserved.
+ * Copyright (c) 2019-2022 Cypress Semiconductor Corporation (an Infineon company)
+ * or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
@@ -11,6 +12,7 @@
 #include "tfm_multi_core_api.h"
 
 #include "cy_ipc_drv.h"
+#include "cy_ipc_sema.h"
 #include "cy_sysint.h"
 #if CY_SYSTEM_CPU_CM0P
 #include "spe_ipc_config.h"
@@ -60,8 +62,9 @@ int platform_mailbox_send_msg_ptr(const void *msg_ptr)
 {
     cy_en_ipcdrv_status_t status;
 
-    if (!msg_ptr)
+    if (!msg_ptr) {
         return PLATFORM_MAILBOX_INVAL_PARAMS;
+    }
 
     status = Cy_IPC_Drv_SendMsgPtr(Cy_IPC_Drv_GetIpcBaseAddress(IPC_TX_CHAN),
                                    IPC_TX_NOTIFY_MASK, msg_ptr);

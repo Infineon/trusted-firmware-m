@@ -69,7 +69,7 @@
                 "monotonic": 0,
                 "smif_id": 0,
                 "clock_flags": 578,
-                "protect_flags": 1,
+                "protect_flags": 3,
                 "upgrade": false,
                 "upgrade_mode": "swap",
                 "resources": [

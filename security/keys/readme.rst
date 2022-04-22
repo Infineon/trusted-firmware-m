@@ -29,3 +29,6 @@ Signing keys have to be provisioned to the board:
 
 Please refer to cysecuretools documentation and cypress_psoc64_spec.rst for
 more details.
+
+---
+© Copyright (c) 2019-2022 Cypress Semiconductor Corporation (an Infineon company) or an affiliate of Cypress Semiconductor Corporation. All rights reserved.

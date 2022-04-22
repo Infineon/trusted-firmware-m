@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2019-2021, Arm Limited. All rights reserved.
+ * Copyright (c) 2022 Cypress Semiconductor Corporation (an Infineon company)
+ * or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -44,13 +46,16 @@ static inline void clear_queue_slot_woken(uint8_t idx)
     }
 }
 
+#ifndef TFM_MULTI_CORE_NS_OS
 static inline void clear_queue_slot_replied(uint8_t idx)
 {
     if (idx < NUM_MAILBOX_QUEUE_SLOT) {
         mailbox_queue_ptr->replied_slots &= ~(1UL << idx);
     }
 }
+#endif
 
+#ifndef TFM_MULTI_CORE_NS_OS
 static inline bool is_queue_slot_replied(uint8_t idx)
 {
     if (idx < NUM_MAILBOX_QUEUE_SLOT) {
@@ -59,6 +64,7 @@ static inline bool is_queue_slot_replied(uint8_t idx)
 
     return false;
 }
+#endif
 
 static uint8_t acquire_empty_slot(struct ns_mailbox_queue_t *queue)
 {

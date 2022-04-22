@@ -17,6 +17,20 @@ See the [README.md](./README.md) for an additional description of the TF-M softw
 
 ## Changelog
 
+### v1.3.3
+* Updated to use PDL v2.4.0
+* Updated TFM to use core-lib v1.3.0 as dependency
+* Added COMPONENT_TFM_S_SRC component to the trusted-firmware-m ModusToolbox library
+  to support building of secure image from sources.
+* Added possibility to remove policy parsing concept with CY_POLICY_CONCEPT=OFF.
+  Refer to Optional arguments section in documentation [Cypress PSoC64 Specifics](https://github.com/Infineon/src-trusted-firmware-m/platform/ext/target/cypress/psoc64/cypress_psoc64_spec.rst)
+* Updated ECC Crypto algorithms to use software implementation only, due to
+  security concerns for HW acceleration. See details in [cypress_mxcrypto_ecc_vulnerability.rst](./docs/reference/security_advisories/cypress_mxcrypto_ecc_vulnerability.rst)
+* Increased performance of PS/ITS by setting ITS_BUF_SIZE and ITS_MAX_ASSET_SIZE
+  to default values in Small and Medium profiles.
+* Provided possibility to have out-of-tree custom partitions.
+* Added TFM_LINK_OPTIONS to provide additional options for linker.
+
 ### v1.3.1
 * Update to PDL v2.3.0
 
@@ -33,11 +47,17 @@ See the [README.md](./README.md) for an additional description of the TF-M softw
 * Initial release for TF-M
 
 ## Known Issues
-n/a
+* Currently, IPC semaphores are not safe from security point of view and do not recommended to use
+* The accessTime from the debugger policy will not have imact on the debug window for programmer/debugger in TF-M.
+ It has constant vlaue equal to 100ms. Please change it manually in the file: [tfm_hal_isolation.c](https://github.com/Infineon/src-trusted-firmware-m/platform/ext/target/cypress/psoc64/tfm_hal_isolation.c)
+ under the following comment: "The delay is required after Access port was enabled for debugger/programmer to connect and set TEST BIT".
+* Due to changes in TF-M 1.3.3 the existing latency could be not enought, please take care about latency update, if
+ any issues observed (for example CY_CFG_PWR_DEEPSLEEP_LATENCY in FreeRTOS).
+
 
 ## Supported Platforms
 This library and its features are supported on the following Cypress platforms:
-* [PSoC® 64 Standard Secure - AWS Wi-Fi BT Pioneer Kit (CY8CKIT-064S0S2-4343W)](https://www.cypress.com/documentation/development-kitsboards/psoc-64-standard-secure-aws-wi-fi-bt-pioneer-kit-cy8ckit)
+* [PSoC® 64 Standard Secure - AWS Wi-Fi BT Pioneer Kit (CY8CKIT-064S0S2-4343W)](https://www.infineon.com/cms/en/product/evaluation-boards/cy8ckit-064s0s2-4343w)
 
 ## Supported Software and Tools
 
@@ -45,25 +65,30 @@ This version of TF-M was validated for compatibility with the following Software
 
 | Software and Tools                                                            | Version       |
 | :---                                                                          | :----         |
-| ModusToolbox Software Environment                                             | 2.3.0         |
+| ModusToolbox Software Environment                                             | 2.4.0         |
 | GCC Compiler                                                                  | 9.3.1         |
 | ARM Compiler 6                                                                | 6.13          |
+| IAR C/C++ compiler                                                            | 8.42.1        |
 | CMake                                                                         | 3.15          |
 | CMSIS-Core(M)                                                                 | 5.5.0         |
 | MbedTLS                                                                       | 2.25.0        |
+| PSoC6 MCUs acceleration for mbedTLS library                                   | 1.3.0         |
+| PSoC64 Secure Boot Utilities Middleware Library                               | 1.0.0         |
+| PSoC 6 Peripheral Driver Library (PDL)                                        | 2.4.0         |
 | Board Support Package (BSP)                                                   | 2.3.0         |
-| PSoC 6 Peripheral Driver Library (PDL)                                        | 2.3.0         |
+| Core Library                                                                  | 1.3.0         |
 | RTOS Abstraction                                                              | 1.4.0         |
 
-Minimum required ModusToolbox Software Environment: v2.3.0
+Minimum required ModusToolbox Software Environment: v2.4.0
 
 ## More information
 Use the following links for more information, as needed:
-* [Cypress Semiconductor, an Infineon Technologies Company](http://www.cypress.com)
-* [Cypress Semiconductor GitHub](https://github.com/cypresssemiconductorco)
-* [PSoC® 64 Secure Microcontrollers](https://www.cypress.com/products/32-bit-arm-cortex-m4-cortex-m0-psoc-64-security-line)
+* [Cypress Semiconductor Corporation (an Infineon company)](https://www.infineon.com)
+* [Cypress Semiconductor Corporation (an Infineon company) GitHub](https://github.com/Infineon)
+* [PSoC® 64 Secure Microcontrollers](https://www.infineon.com/cms/en/product/microcontroller/32-bit-psoc-arm-cortex-microcontroller/psoc-6-32-bit-arm-cortex-m4-mcu/psoc-64)
 * [Trusted Firmware website](https://www.trustedfirmware.org)
+* [Cypress PSoC64 Specifics documentation](https://github.com/Infineon/src-trusted-firmware-m/platform/ext/target/cypress/psoc64/cypress_psoc64_spec.rst)
 * [TF-M project](https://www.trustedfirmware.org/projects/tf-m)
 
 ---
-© Cypress Semiconductor Corporation, 2021.
+*© Copyright (c) 2020-2022 Cypress Semiconductor Corporation (an Infineon company) or an affiliate of Cypress Semiconductor Corporation. All rights reserved.*

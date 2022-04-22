@@ -1,5 +1,7 @@
 /*
  * Copyright (c) 2018-2021, Arm Limited. All rights reserved.
+ * Copyright (c) 2022 Cypress Semiconductor Corporation (an Infineon company)
+ * or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -917,7 +919,7 @@ psa_status_t psa_aead_encrypt(psa_key_id_t key,
         .sfn_id = TFM_CRYPTO_AEAD_ENCRYPT_SID,
         .key_id = key,
         .alg = alg,
-        .aead_in = {.nonce = {0}, .nonce_length = nonce_length}
+        .aead_in = {.nonce = {0}, .nonce_length = 0}
     };
 
     /* Sanitize the optional input */
@@ -925,9 +927,8 @@ psa_status_t psa_aead_encrypt(psa_key_id_t key,
         return PSA_ERROR_INVALID_ARGUMENT;
     }
 
-    size_t idx = 0;
     psa_invec in_vec[] = {
-        {.base = &iov, .len = sizeof(struct tfm_crypto_pack_iovec)},
+        {.base = NULL, .len = 0},
         {.base = plaintext, .len = plaintext_length},
         {.base = additional_data, .len = additional_data_length},
     };
@@ -940,12 +941,16 @@ psa_status_t psa_aead_encrypt(psa_key_id_t key,
     }
 
     if (nonce != NULL) {
-        for (idx = 0; idx < nonce_length; idx++) {
+        for (size_t idx = 0; idx < nonce_length; idx++) {
             iov.aead_in.nonce[idx] = nonce[idx];
         }
+        iov.aead_in.nonce_length = nonce_length;
     }
 
     PSA_CONNECT(TFM_CRYPTO);
+    
+    in_vec[0].base = &iov;
+    in_vec[0].len = sizeof(struct tfm_crypto_pack_iovec);
 
     size_t in_len = ARRAY_SIZE(in_vec);
     if (additional_data == NULL) {
@@ -978,7 +983,7 @@ psa_status_t psa_aead_decrypt(psa_key_id_t key,
         .sfn_id = TFM_CRYPTO_AEAD_DECRYPT_SID,
         .key_id = key,
         .alg = alg,
-        .aead_in = {.nonce = {0}, .nonce_length = nonce_length}
+        .aead_in = {.nonce = {0}, .nonce_length = 0}
     };
 
     /* Sanitize the optional input */
@@ -986,9 +991,8 @@ psa_status_t psa_aead_decrypt(psa_key_id_t key,
         return PSA_ERROR_INVALID_ARGUMENT;
     }
 
-    size_t idx = 0;
     psa_invec in_vec[] = {
-        {.base = &iov, .len = sizeof(struct tfm_crypto_pack_iovec)},
+        {.base = NULL, .len = 0},
         {.base = ciphertext, .len = ciphertext_length},
         {.base = additional_data, .len = additional_data_length},
     };
@@ -1001,12 +1005,16 @@ psa_status_t psa_aead_decrypt(psa_key_id_t key,
     }
 
     if (nonce != NULL) {
-        for (idx = 0; idx < nonce_length; idx++) {
+        for (size_t idx = 0; idx < nonce_length; idx++) {
             iov.aead_in.nonce[idx] = nonce[idx];
         }
+        iov.aead_in.nonce_length = nonce_length;
     }
 
     PSA_CONNECT(TFM_CRYPTO);
+
+    in_vec[0].base = &iov;
+    in_vec[0].len = sizeof(struct tfm_crypto_pack_iovec);
 
     size_t in_len = ARRAY_SIZE(in_vec);
     if (additional_data == NULL) {
@@ -1406,6 +1414,12 @@ psa_status_t psa_set_key_domain_parameters(psa_key_attributes_t *attributes,
                                            const uint8_t *data,
                                            size_t data_length)
 {
+    /* unused parameters */
+    (void)attributes;
+    (void)type;
+    (void)data;
+    (void)data_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1419,6 +1433,12 @@ psa_status_t psa_get_key_domain_parameters(
                                          size_t data_size,
                                          size_t *data_length)
 {
+    /* unused parameters */
+    (void)attributes;
+    (void)data;
+    (void)data_size;
+    (void)data_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1430,6 +1450,11 @@ psa_status_t psa_aead_update_ad(psa_aead_operation_t *operation,
                                 const uint8_t *input,
                                 size_t input_length)
 {
+    /* unused parameters */
+    (void)operation;
+    (void)input;
+    (void)input_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1445,6 +1470,15 @@ psa_status_t psa_aead_finish(psa_aead_operation_t *operation,
                              size_t tag_size,
                              size_t *tag_length)
 {
+    /* unused parameters */
+    (void)operation;
+    (void)ciphertext;
+    (void)ciphertext_size;
+    (void)ciphertext_length;
+    (void)tag;
+    (void)tag_size;
+    (void)tag_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1459,6 +1493,14 @@ psa_status_t psa_aead_verify(psa_aead_operation_t *operation,
                              const uint8_t *tag,
                              size_t tag_length)
 {
+    /* unused parameters */
+    (void)operation;
+    (void)plaintext;
+    (void)plaintext_size;
+    (void)plaintext_length;
+    (void)tag;
+    (void)tag_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1468,6 +1510,8 @@ psa_status_t psa_aead_verify(psa_aead_operation_t *operation,
 
 psa_status_t psa_aead_abort(psa_aead_operation_t *operation)
 {
+    (void)operation; /* unused parameter */
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1483,6 +1527,15 @@ psa_status_t psa_mac_compute(psa_key_id_t key,
                              size_t mac_size,
                              size_t *mac_length)
 {
+    /* unused parameters */
+    (void)key;
+    (void)alg;
+    (void)input;
+    (void)input_length;
+    (void)mac;
+    (void)mac_size;
+    (void)mac_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1497,6 +1550,14 @@ psa_status_t psa_mac_verify(psa_key_id_t key,
                             const uint8_t *mac,
                             const size_t mac_length)
 {
+    /* unused parameters */
+    (void)key;
+    (void)alg;
+    (void)input;
+    (void)input_length;
+    (void)mac;
+    (void)mac_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1512,6 +1573,15 @@ psa_status_t psa_cipher_encrypt(psa_key_id_t key,
                                 size_t output_size,
                                 size_t *output_length)
 {
+    /* unused parameters */
+    (void)key;
+    (void)alg;
+    (void)input;
+    (void)input_length;
+    (void)output;
+    (void)output_size;
+    (void)output_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1527,6 +1597,15 @@ psa_status_t psa_cipher_decrypt(psa_key_id_t key,
                                 size_t output_size,
                                 size_t *output_length)
 {
+    /* unused parameters */
+    (void)key;
+    (void)alg;
+    (void)input;
+    (void)input_length;
+    (void)output;
+    (void)output_size;
+    (void)output_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1680,6 +1759,11 @@ psa_status_t psa_aead_encrypt_setup(psa_aead_operation_t *operation,
                                     psa_key_id_t key,
                                     psa_algorithm_t alg)
 {
+    /* unused parameters */
+    (void)operation;
+    (void)key;
+    (void)alg;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1691,6 +1775,11 @@ psa_status_t psa_aead_decrypt_setup(psa_aead_operation_t *operation,
                                     psa_key_id_t key,
                                     psa_algorithm_t alg)
 {
+    /* unused parameters */
+    (void)operation;
+    (void)key;
+    (void)alg;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1703,6 +1792,12 @@ psa_status_t psa_aead_generate_nonce(psa_aead_operation_t *operation,
                                      size_t nonce_size,
                                      size_t *nonce_length)
 {
+    /* unused parameters */
+    (void)operation;
+    (void)nonce;
+    (void)nonce_size;
+    (void)nonce_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1714,6 +1809,11 @@ psa_status_t psa_aead_set_nonce(psa_aead_operation_t *operation,
                                 const uint8_t *nonce,
                                 size_t nonce_length)
 {
+    /* unused parameters */
+    (void)operation;
+    (void)nonce;
+    (void)nonce_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1725,6 +1825,11 @@ psa_status_t psa_aead_set_lengths(psa_aead_operation_t *operation,
                                   size_t ad_length,
                                   size_t plaintext_length)
 {
+    /* unused parameters */
+    (void)operation;
+    (void)ad_length;
+    (void)plaintext_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;
@@ -1739,6 +1844,14 @@ psa_status_t psa_aead_update(psa_aead_operation_t *operation,
                              size_t output_size,
                              size_t *output_length)
 {
+    /* unused parameters */
+    (void)operation;
+    (void)input;
+    (void)input_length;
+    (void)output;
+    (void)output_size;
+    (void)output_length;
+
     psa_status_t status;
 
     status = PSA_ERROR_NOT_SUPPORTED;

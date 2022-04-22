@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2019, Arm Limited. All rights reserved.
- * Copyright (c) 2019, Cypress Semiconductor Corporation. All rights reserved
+ * Copyright (c) 2019-2022 Cypress Semiconductor Corporation (an Infineon company)
+ * or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -14,14 +15,14 @@
 
 #define IPC_PSA_CLIENT_CALL_CHAN         (8)
 #define IPC_PSA_CLIENT_CALL_INTR_STRUCT  (6)
-#define IPC_PSA_CLIENT_CALL_INTR_MASK    (1 << IPC_PSA_CLIENT_CALL_CHAN)
-#define IPC_PSA_CLIENT_CALL_NOTIFY_MASK  (1 << IPC_PSA_CLIENT_CALL_INTR_STRUCT)
+#define IPC_PSA_CLIENT_CALL_INTR_MASK    (1UL << IPC_PSA_CLIENT_CALL_CHAN)
+#define IPC_PSA_CLIENT_CALL_NOTIFY_MASK  (1UL << IPC_PSA_CLIENT_CALL_INTR_STRUCT)
 #define IPC_PSA_CLIENT_CALL_IPC_INTR     cpuss_interrupts_ipc_6_IRQn
 
 #define IPC_PSA_CLIENT_REPLY_CHAN        (9)
 #define IPC_PSA_CLIENT_REPLY_INTR_STRUCT (8)
-#define IPC_PSA_CLIENT_REPLY_INTR_MASK   (1 << IPC_PSA_CLIENT_REPLY_CHAN)
-#define IPC_PSA_CLIENT_REPLY_NOTIFY_MASK (1 << IPC_PSA_CLIENT_REPLY_INTR_STRUCT)
+#define IPC_PSA_CLIENT_REPLY_INTR_MASK   (1UL << IPC_PSA_CLIENT_REPLY_CHAN)
+#define IPC_PSA_CLIENT_REPLY_NOTIFY_MASK (1UL << IPC_PSA_CLIENT_REPLY_INTR_STRUCT)
 #define IPC_PSA_CLIENT_REPLY_IPC_INTR    cpuss_interrupts_ipc_8_IRQn
 
 #define IPC_PSA_MAILBOX_LOCK_CHAN        (10)
@@ -30,8 +31,8 @@
 
 #define CY_IPC_NOTIFY_SHIFT              (16)
 
-#define PSA_CLIENT_CALL_REQ_MAGIC        (0xA5CF50C6)
-#define PSA_CLIENT_CALL_REPLY_MAGIC      (0xC605FC5A)
+#define PSA_CLIENT_CALL_REQ_MAGIC        (0xA5CF50C6UL)
+#define PSA_CLIENT_CALL_REPLY_MAGIC      (0xC605FC5AUL)
 
 #define NS_MAILBOX_INIT_ENABLE           (0xAE)
 #define S_MAILBOX_READY                  (0xC3)
@@ -46,7 +47,7 @@
 #define PLATFORM_MAILBOX_IPC_CHAN_SEMA   CY_IPC_CHAN_SEMA
 #define MAILBOX_SEMAPHORE_NUM            (16)
 
-#define IPC_SYNC_MAGIC                   0x7DADE011
+#define IPC_SYNC_MAGIC                   (0x7DADE011UL)
 
 /**
  * \brief Fetch a pointer from mailbox message
