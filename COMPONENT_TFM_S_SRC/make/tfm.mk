@@ -10,13 +10,13 @@
 # Copyright (c) 2022 Cypress Semiconductor Corporation (an Infineon company)
 # or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ include $(join $(dir $(lastword $(MAKEFILE_LIST))),common.mk)
 ################################################################################
 
 TFM_GIT_URL?=https://github.com/Infineon/src-trusted-firmware-m.git
-TFM_GIT_REF?=release-v1.3.3
+TFM_GIT_REF?=release-v1.3.5
 
 TFM_PLATFORM?=cypress/psoc64
 TFM_PROFILE?=profile_medium
@@ -72,7 +72,7 @@ ifndef TFM_BUILD_DIR
 TFM_BUILD_DIR:=$(call TFM_PATH_MIXED,$(CY_APP_LOCATION)/build/$(TARGET)/$(CONFIG))
 endif
 TFM_TMP_DIR:=$(call TFM_PATH_MIXED,$(TFM_MAKE_SRC_DIR)/.tmp)
-ifndef TFM_SRC_DIR 
+ifndef TFM_SRC_DIR
 TFM_SRC_DIR:=$(call TFM_PATH_MIXED,$(TFM_TMP_DIR)/src)
 endif
 TFM_TOOLS_DIR:=$(call TFM_PATH_MIXED,$(TFM_TMP_DIR)/tools)
