@@ -42,7 +42,7 @@ include $(join $(dir $(lastword $(MAKEFILE_LIST))),common.mk)
 ################################################################################
 
 TFM_GIT_URL?=https://github.com/Infineon/src-trusted-firmware-m.git
-TFM_GIT_REF?=release-v1.3.5
+TFM_GIT_REF?=release-v1.3.100
 
 TFM_PLATFORM?=cypress/psoc64
 TFM_PROFILE?=profile_medium
@@ -54,7 +54,7 @@ TFM_CONFIGURE_OPTIONS+= -DCMAKE_BUILD_TYPE=$(TFM_CMAKE_BUILD_TYPE)
 else ifeq ($(CONFIG),Debug)
 TFM_CONFIGURE_OPTIONS+= -DCMAKE_BUILD_TYPE=Debug
 else ifeq ($(CONFIG),Release)
-TFM_CONFIGURE_OPTIONS+= -DCMAKE_BUILD_TYPE=Release
+TFM_CONFIGURE_OPTIONS+= -DCMAKE_BUILD_TYPE=RelWithDebInfo
 else
 $(error Please use TFM_CMAKE_BUILD_TYPE (Debug, Release, RelWithDebInfo or MinSizeRel) or CONFIG (Debug, Release) to specify build type!)
 endif
@@ -69,7 +69,7 @@ TFM_CONFIGURE_OPTIONS+= -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON
 TFM_CONFIGURE_OPTIONS+= -DCY_INSTALL_NS_INTERFACE:BOOL=ON
 
 ifndef TFM_BUILD_DIR
-TFM_BUILD_DIR:=$(call TFM_PATH_MIXED,$(CY_APP_LOCATION)/build/$(TARGET)/$(CONFIG))
+TFM_BUILD_DIR:=$(call TFM_PATH_MIXED,$(_MTB_TOOLS__MAKEFILE_DIR)/build/$(TARGET)/$(CONFIG))
 endif
 TFM_TMP_DIR:=$(call TFM_PATH_MIXED,$(TFM_MAKE_SRC_DIR)/.tmp)
 ifndef TFM_SRC_DIR
@@ -105,7 +105,7 @@ TFM_CONFIGURE_OPTIONS+= "-DTFM_TOOLCHAIN_FILE:FILEPATH=$(TFM_TOOLCHAIN_FILE)"
 
 
 ifndef TFM_COMPILE_COMMANDS_PATH
-TFM_COMPILE_COMMANDS_PATH:=$(call TFM_PATH_MIXED,$(CY_APP_LOCATION)/build/compile_commands.json)
+TFM_COMPILE_COMMANDS_PATH:=$(call TFM_PATH_MIXED,$(_MTB_TOOLS__MAKEFILE_DIR)/build/compile_commands.json)
 endif
 TFM_COMPILE_COMMANDS_SRC_PATH:=$(call TFM_PATH_MIXED,$(TFM_BUILD_DIR)/compile_commands.json)
 
@@ -125,7 +125,7 @@ ifneq ($($(2)),)
 TFM_CONFIGURE_OPTIONS+= "-D$(1):STRING=$($(2))"
 else ifneq ($($(3)),)
 # Use library defined by MTB Library Manager
-TFM_CONFIGURE_OPTIONS+= "-D$(1):STRING=$(call TFM_PATH_MIXED,$(CY_APP_LOCATION)/$($(3)))"
+TFM_CONFIGURE_OPTIONS+= "-D$(1):STRING=$(call TFM_PATH_MIXED,$(_MTB_TOOLS__MAKEFILE_DIR)/$($(3)))"
 else
 # Use library provided by TF-M
 endif
@@ -163,6 +163,9 @@ TFM_TOOLS_CMAKE?=$(shell which cmake 2>/dev/null)
 ################################################################################
 # Local variables
 ################################################################################
+
+# Is used to unzip archives (e.g. CMake archive)
+TFM_PY_UNZIP="exec(\"import sys\nfrom zipfile import PyZipFile\nfor zip_file in sys.argv[1:]:\n    pzf = PyZipFile(zip_file)\n    pzf.extractall()\")"
 
 ifeq ($(TFM_TOOLS_CMAKE),)
 # Prepare variables to install CMake
@@ -303,8 +306,6 @@ endif   # ifneq ($(TFM_BUILD_DIR),)
 ################################################################################
 # Tools
 ################################################################################
-
-TFM_PY_UNZIP="exec(\"import sys\nfrom zipfile import PyZipFile\nfor zip_file in sys.argv[1:]:\n    pzf = PyZipFile(zip_file)\n    pzf.extractall()\")"
 
 # === Prepare CMake ===
 ifneq ($(TFM_TOOLS_CMAKE_INSTALL),)
