@@ -42,7 +42,7 @@ include $(join $(dir $(lastword $(MAKEFILE_LIST))),common.mk)
 ################################################################################
 
 TFM_GIT_URL?=https://github.com/Infineon/src-trusted-firmware-m.git
-TFM_GIT_REF?=release-v1.3.100
+TFM_GIT_REF?=release-v1.3.110
 
 TFM_PLATFORM?=cypress/psoc64
 TFM_PROFILE?=profile_medium
