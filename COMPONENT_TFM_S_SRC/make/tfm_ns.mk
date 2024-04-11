@@ -7,7 +7,7 @@
 #
 ################################################################################
 # \copyright
-# Copyright (c) 2022 Cypress Semiconductor Corporation (an Infineon company)
+# Copyright (c) 2022-2024 Cypress Semiconductor Corporation (an Infineon company)
 # or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -114,12 +114,15 @@ ifneq ($(CY_SECONDSTAGE),true)
 LINKER_SCRIPT=$(LINKER_SCRIPT_SRC)
 
 build: $(LINKER_SCRIPT_PARSED)
+build_proj: $(LINKER_SCRIPT_PARSED)
 
 # Recipe to generate linker script
 $(LINKER_SCRIPT_PARSED): $(LINKER_SCRIPT_SRC) $(LINKER_SCRIPT_PARSED).d $(TFM_NS_DEFS_PATH)
 	@echo "Generating $(LINKER_SCRIPT_PARSED)"
 	mkdir -p $(dir $@) && \
-	$(call TFM_PREPROCESSOR,$@,$<,$(addprefix -D,$(DEFINES)) -I$(TFM_S_APP_INSTALL_PATH)/memory_layout) && \
+	touch $(LINKER_SCRIPT_PARSED) && \
+	($(call TFM_PREPROCESSOR,$@,$<,$(addprefix -D,$(DEFINES)) -I$(TFM_S_APP_INSTALL_PATH)/memory_layout) || \
+	rm -f $(LINKER_SCRIPT_PARSED)) && \
 	[[ -f $(LINKER_SCRIPT_PARSED) ]] && touch $(LINKER_SCRIPT_PARSED)
 
 # Dependencies for linker script

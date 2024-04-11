@@ -7,7 +7,7 @@
 #
 ################################################################################
 # \copyright
-# Copyright 2022, Cypress Semiconductor Corporation (an Infineon company)
+# Copyright 2022-2024, Cypress Semiconductor Corporation (an Infineon company)
 # or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -205,9 +205,16 @@ endif
 
 # Disable auto discovery mode
 ifeq ($(CY_SECONDSTAGE),true)
+# Extract targets which triggers build
+IS_BUILD_TARGET=$(findstring all,$(MAKECMDGOALS))$(findstring build,$(MAKECMDGOALS))$(findstring build_proj,$(MAKECMDGOALS))
+# Disable autodiscovery only for build targets, still have it enabled for
+# other targets (e.g. getlibs)
+ifneq ($(IS_BUILD_TARGET),)
 CY_SKIP_RECIPE=true
+endif
 all: tfm-build
 build: tfm-build
+build_proj: tfm-build
 endif
 
 include $(CY_TOOLS_DIR)/make/start.mk

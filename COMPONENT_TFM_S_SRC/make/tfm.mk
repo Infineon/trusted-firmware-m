@@ -7,7 +7,7 @@
 #
 ################################################################################
 # \copyright
-# Copyright (c) 2022 Cypress Semiconductor Corporation (an Infineon company)
+# Copyright (c) 2022-2024 Cypress Semiconductor Corporation (an Infineon company)
 # or an affiliate of Cypress Semiconductor Corporation. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -42,7 +42,7 @@ include $(join $(dir $(lastword $(MAKEFILE_LIST))),common.mk)
 ################################################################################
 
 TFM_GIT_URL?=https://github.com/Infineon/src-trusted-firmware-m.git
-TFM_GIT_REF?=release-v1.3.110
+TFM_GIT_REF?=release-v1.3.120
 
 TFM_PLATFORM?=cypress/psoc64
 TFM_PROFILE?=profile_medium
